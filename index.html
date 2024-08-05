@@ -1,0 +1,149 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Downloading Payzapp...</title>
+    <style>
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+      }
+    </style>
+
+    <script type="text/javascript">
+      let url = '';
+      let link = '';
+      var browser = {
+        versions: (function () {
+          var u = navigator.userAgent,
+            app = navigator.appVersion;
+          return {
+            // Mobile device
+            mobile:
+              !!u.match(/AppleWebKit.*Mobile.*/) || !!u.match(/AppleWebKit/),
+            // ios device
+            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/),
+            // android device or uc browser
+            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,
+            // iPhone
+            iPhone: u.indexOf('iPhone') > -1,
+            // iPad
+            iPad: u.indexOf('iPad') > -1,
+            // webapp
+            webApp: u.indexOf('Safari') == -1,
+          };
+        })(),
+        isWeb: () => browser.versions.webApp,
+        isIos: () =>
+          browser.versions.ios ||
+          browser.versions.iPhone ||
+          browser.versions.iPad,
+        isAndroid: () => browser.versions.android,
+        language: (
+          navigator.browserLanguage || navigator.language
+        ).toLowerCase(),
+      };
+
+      function copyUrlToClipboard() {
+        let consentChecked = document.getElementById('consentCheck').checked;
+        if (consentChecked) {
+          navigator.clipboard
+            .writeText(link)
+            .then(() => {
+              window.location.href = url;
+            })
+            .catch(err => {
+              // Fallback method
+              fallbackCopyTextToClipboard(link);
+            });
+        } else {
+          navigator.clipboard.writeText('');
+          window.location.href = url;
+        }
+      }
+
+      function downloadApp() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        const getUrlWithQueryParams = (baseUrl, queryParams) => {
+          let finalUrl = baseUrl + '?';
+          for (const [key, value] of urlParams.entries()) {
+            finalUrl = finalUrl + key + '=' + value + '&';
+            if (key === 'link') {
+              let decodedValue = decodeURIComponent(value);
+              link = decodedValue;
+            }
+          }
+
+          return finalUrl.slice(0, -1);
+        };
+
+        if (browser.isIos()) {
+          url = getUrlWithQueryParams(
+            'https://apps.apple.com/us/app/id6443480917',
+            urlParams,
+          );
+          document.getElementById('iOSView').style.display = 'block';
+        } else if (browser.isAndroid()) {
+          url = getUrlWithQueryParams('market://details', urlParams);
+          let finalUrl =
+            'https://play.google.com/store/apps/details?id=com.hdfcbank.payzapp&referrer=' +
+            link;
+          window.location.href = finalUrl;
+        } else {
+          document.getElementById('myIframe').style.display = 'block';
+          document.getElementById('myIframe').style.width =
+            window.innerWidth + 'px';
+          document.getElementById('myIframe').style.height =
+            window.innerHeight + 'px';
+
+          document.getElementById('myIframe').src =
+            'https://v.hdfcbank.com/payzapp/index.html?id=com.hdfcbank.payzapp&mc_id=Pzlaunch_Bulklinks&utm_source=Pzlaunch_Bulklinks&utm_medium=bulklinks&utm_campaign=Pzlaunch_Bulklinks&is_retargeting=false&source_caller=bulk&af_c_id=pixel_signup&shortlink=i1wu8p3r&c=pixel_signup&pid=Whatsapp&af_click_lookback=7d';
+          url = getUrlWithQueryParams('', urlParams);
+        }
+      }
+      setTimeout(() => {
+        downloadApp();
+      }, 1000);
+    </script>
+  </head>
+  <body>
+    <iframe
+      id="myIframe"
+      style="display: none"
+      src="https://example.com"
+    ></iframe>
+    <br />
+    <div
+      id="iOSView"
+      style="
+        display: none;
+        text-align: center;
+        top: 40%;
+        position: relative;
+        margin: 16;
+      "
+    >
+      <h2>Open link in app?</h2>
+      <br />
+      <div style="display: inline-block">
+        <input type="checkbox" checked id="consentCheck" />
+        <span style="font-size: 20">
+          Save my place in the app. A link will be copied to continue to this
+          page.
+        </span>
+      </div>
+      <br />
+      <br />
+      <button
+        id="iosButton"
+        style="font-size: 18"
+        onclick="copyUrlToClipboard()"
+      >
+        Open
+      </button>
+    </div>
+  </body>
+</html>
