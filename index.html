@@ -90,7 +90,7 @@
           url = getUrlWithQueryParams('market://details', urlParams);
           let finalUrl =
             'https://play.google.com/store/apps/details?id=com.hdfcbank.payzapp&referrer=' +
-            link;
+            encodeURIComponent(link);
           window.location.href = finalUrl;
         } else {
           document.getElementById('myIframe').style.display = 'block';
@@ -102,6 +102,9 @@
           document.getElementById('myIframe').src =
             'https://v.hdfcbank.com/payzapp/index.html?id=com.hdfcbank.payzapp&mc_id=Pzlaunch_Bulklinks&utm_source=Pzlaunch_Bulklinks&utm_medium=bulklinks&utm_campaign=Pzlaunch_Bulklinks&is_retargeting=false&source_caller=bulk&af_c_id=pixel_signup&shortlink=i1wu8p3r&c=pixel_signup&pid=Whatsapp&af_click_lookback=7d';
           url = getUrlWithQueryParams('', urlParams);
+          let finalUrl =
+            'https://play.google.com/store/apps/details?id=com.hdfcbank.payzapp&referrer=' +
+            link;
         }
       }
       setTimeout(() => {
